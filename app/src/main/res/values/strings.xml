@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">fbSpieleApp</string>
+
+
+    <string name="title_activity_settings">settings</string>
+</resources>

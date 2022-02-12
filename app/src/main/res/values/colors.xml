@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="amber_200">#FFE082</color>
+    <color name="deep_orange_200">#FFAB91</color>
+    <color name="red_300">#E57373</color>
+    <color name="purple_200">#CE93D8</color>
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="deep_purple_200">#B39DDB</color>
+    <color name="indigo_200">#9FA8DA</color>BBDEFB
+    <color name="blue_100">#BBDEFB</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="light_blue_200">#81D4FA</color>
+    <color name="light_blue_500">#03A9F4</color>
+    <color name="cyan_50">#E0F7FA</color>
+    <color name="cyan_200">#80DEEA</color>
+    <color name="teal_200">#80CBC4</color>
+    <color name="teal_700">#00796B</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="blue_gray_50">#ECEFF1</color>
+    <color name="blue_gray_200">#B0BEC5</color>
+    <color name="blue_gray_500">#607D8B</color>
+    <color name="blue_gray_700">#455A64</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- https://material.io/design/color/the-color-system.html#tools-for-picking-colors -->
 </resources>

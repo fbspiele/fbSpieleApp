@@ -3,4 +3,37 @@
 
 
     <string name="title_activity_settings">settings</string>
+
+
+    <string name="settings_headers_user">user settings</string>
+    <string name="settings_headers_technical">technical settings</string>
+    <string name="settings_headersKey_user">settings_headersKey_user</string>
+    <string name="settings_headersKey_technical">settings_headersKey_technical</string>
+
+    <string name="settings_key_ipAddress">settings_key_ipAddress</string>
+    <string name="settings_title_ipAddress">server ip address</string>
+    <string name="settings_default_ipAddress">192.168.0.7</string>
+
+    <string name="settings_key_password">settings_key_password</string>
+    <string name="settings_title_password">password</string>
+
+
+
+
+
+
+
+    <string name="maincards_connection_title_text">connection</string>
+    <string name="maincards_connection_connected_text">connected</string>
+    <string name="maincards_connection_disconnected_text">disconnected</string>
+    <string name="maincards_connection_pinging_text">pinging …</string>
+    <string name="maincards_connection_tryingToReconnect_text">trying to reconnect</string>
+
+    <string name="maincards_settings_title_text">settings</string>
+    <string name="maincards_buzzer_title_text">buzzer</string>
+    <string name="maincards_woLiegtWas_title_text">wo liegt was</string>
+    <string name="maincards_bierathlon_title_text">bierathlon</string>
+    <string name="maincards_schaetztn_title_text">schätztn</string>
+
+
 </resources>

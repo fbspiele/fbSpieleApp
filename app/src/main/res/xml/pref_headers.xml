@@ -1,35 +1,14 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="a">
+    <Preference
+        android:key="@string/settings_headersKey_user"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="@string/settings_headers_user" />
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="b"
-            app:useSimpleSummaryProvider="true" />
-
-        <!--<ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />-->
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="c">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="d" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="off"
-            app:summaryOn="on"
-            app:title="e" />
-
-    </PreferenceCategory>
+    <Preference
+        android:key="@string/settings_headersKey_technical"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/settings_headers_technical" />
 
 </PreferenceScreen>

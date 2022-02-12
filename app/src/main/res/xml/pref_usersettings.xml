@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="user">
+
+        <EditTextPreference
+            app:key="@string/settings_key_ipAddress"
+            app:title="@string/settings_title_ipAddress"
+            app:useSimpleSummaryProvider="true"
+            android:inputType="number"
+            android:digits="0123456789." />
+
+
+        <EditTextPreference
+            app:key="@string/settings_key_password"
+            app:title="@string/settings_title_password"
+            app:useSimpleSummaryProvider="true"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="textPassword" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="technical">
+
+        <SwitchPreferenceCompat
+            app:key="sync"
+            app:title="d" />
+
+        <SwitchPreferenceCompat
+            app:dependency="sync"
+            app:key="attachment"
+            app:summaryOff="off"
+            app:summaryOn="on"
+            app:title="e" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="user">
+    <PreferenceCategory app:title="connection">
 
         <EditTextPreference
             app:key="@string/settings_key_ipAddress"
@@ -19,20 +19,26 @@
             android:singleLine="true"
             android:inputType="textPassword" />
 
+        <EditTextPreference
+            app:key="@string/settings_key_salt"
+            app:title="@string/settings_title_salt"
+            app:useSimpleSummaryProvider="true"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="textPassword" />
+
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="technical">
+    <PreferenceCategory app:title="game">
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="d" />
+        <EditTextPreference
+            app:key="@string/settings_key_name"
+            app:title="@string/settings_title_name"
+            app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="off"
-            app:summaryOn="on"
-            app:title="e" />
+        <Preference
+            app:key="@string/settings_key_color"
+            app:title="@string/settings_title_color" />
 
     </PreferenceCategory>
 

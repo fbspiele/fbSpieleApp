@@ -34,7 +34,6 @@ public class Crypto {
     //final static String tag = "Crypto";
 
 
-    String name;
     private static final String ENCRYPT_ALGO = "AES/GCM/NoPadding";
     private static final int TAG_LENGTH_BIT = 128;
     private static final int IV_LENGTH_BYTE = 12;
@@ -44,8 +43,7 @@ public class Crypto {
 
     SecretKey secretKey;
 
-
-    public Crypto(String password, String salt, String name) {
+    public Crypto(String password, String salt) {
         if (password == null) {
             System.out.println("ERROR password null");
         }
@@ -55,7 +53,6 @@ public class Crypto {
         assert password != null;
         assert salt != null;
 
-        this.name = name;
         try {
             this.secretKey = getAESKeyFromPassword(password.toCharArray(), salt.getBytes());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {

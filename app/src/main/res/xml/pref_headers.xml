@@ -3,12 +3,12 @@
 
     <Preference
         android:key="@string/settings_headersKey_user"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_sports_esports_black_24dp"
         android:title="@string/settings_headers_user" />
 
     <Preference
         android:key="@string/settings_headersKey_technical"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/ic_engineering_black_24dp"
         android:title="@string/settings_headers_technical" />
 
 </PreferenceScreen>

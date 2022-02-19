@@ -1,17 +1,32 @@
 package com.fbspiele.fbspieleapp;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.CrossProcessCursor;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.ResourceCursorAdapter;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -142,16 +157,84 @@ public class SettingsActivity extends AppCompatActivity {
                 return false;
             });
 
+            final Context context = getContext();
             Preference colorPref = findPreference(getString(R.string.settings_key_color));
             assert colorPref != null;
             colorPref.setOnPreferenceClickListener(preference -> {
-                // todo
+                assert context != null;
+
+                ScrollView scrollView = new ScrollView(context);
+                scrollView.addView(getColorRadioGroup(context, sharedPref));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("choose your color")
+                        .setView(scrollView)
+                        .setPositiveButton("close", (dialog, which) -> dialog.dismiss());
+                builder.create().show();
                 return false;
             });
+
         }
 
     }
 
 
 
+    static String[] getAllColorNames(Context context){
+        Resources resources = context.getResources();
+        String packageName = context.getPackageName();
+        String[] colorBaseNames = {"red", "pink", "purple", "deep_purple", "indigo", "blue", "light_blue", "cyan", "teal", "green", "light_green", "lime", "yellow", "amber", "orange", "deep_orange", "brown", "gray", "blue_gray"};
+        String[] colorValues = {"50", "100", "200", "300", "400", "500", "600", "700", "800", "900"};
+        List<String> colorList = new ArrayList<>();
+
+        for (String colorBaseName : colorBaseNames) {
+            for (String colorValue : colorValues){
+                String colorName = colorBaseName+"_"+colorValue;
+                int colorId = resources.getIdentifier(colorName,"color",packageName);
+                if(colorId != 0){
+                    colorList.add(colorName);
+                }
+            }
+        }
+        return colorList.toArray(new String[0]);
+    }
+
+    static View getColorRadioGroup(Context context, SharedPreferences sharedPref){
+
+        String[] colorNameArray = getAllColorNames(context);
+
+        Resources resources = context.getResources();
+        String packageName = context.getPackageName();
+        RadioGroup radioGroup = new RadioGroup(context);
+        int oldColor = sharedPref.getInt(context.getString(R.string.settings_key_color),0);
+        int idOfOldColor = 0;
+        int index = 0;
+        for (String colorName : colorNameArray){
+            RadioButton radioButton = new RadioButton(context);
+            radioButton.setText(colorName);
+            radioButton.setId(index);
+            int colorId = resources.getIdentifier(colorName,"color",packageName);
+            int color = 0;
+            if(colorId != 0){
+                color = resources.getColor(colorId);
+            }
+            Log.v("tag","color " + color);
+            radioButton.setTextColor(color);
+            if(color == oldColor){
+                idOfOldColor = index;
+                Log.v("tag","right color");
+            }
+
+            final int finalColor = color;
+            radioButton.setOnCheckedChangeListener((compoundButton, b) -> {
+                if(b){
+                    sharedPref.edit().putInt(context.getString(R.string.settings_key_color),finalColor).apply();
+                }
+            });
+            radioGroup.addView(radioButton);
+            index++;
+        }
+        radioGroup.check(idOfOldColor);
+        return radioGroup;
+    }
 }

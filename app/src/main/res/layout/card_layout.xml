@@ -13,7 +13,15 @@
         android:layout_margin="4dp"
         card_view:contentPadding="16dp"
         card_view:cardCornerRadius="6dp"
-        card_view:cardBackgroundColor="@color/cardview_dark_background">
+        card_view:cardBackgroundColor="@color/cardview_dark_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+        <!-- for the animation onclick
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"-->
 
         <LinearLayout
             android:id="@+id/card_view_inner_linear_layout"

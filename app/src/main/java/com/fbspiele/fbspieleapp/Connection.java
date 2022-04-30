@@ -113,11 +113,17 @@ class Connection implements Runnable {
             return;
         }
         Log.v(tag,message);
-        if(message.contains("connected")){
+        if(message.contains(getString(R.string.connected_message))){
             connectivity.connected();
         }
-        if(message.contains("pong")){
+        if(message.contains(getString(R.string.ping_response))){
             mainActivity.onPong();
+        }
+        if(message.contains(getString(R.string.buzzer_firstBuzzer_message))){
+            mainActivity.firstBuzzered();
+        }
+        if(message.contains(getString(R.string.buzzer_toSlow_message))){
+            mainActivity.buzzeredToSlow();
         }
     }
 

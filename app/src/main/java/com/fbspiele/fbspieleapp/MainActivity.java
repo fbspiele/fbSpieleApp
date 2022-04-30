@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction().add(R.id.activity_main_frame_layout, new allGamesFragment(fragmentManager)).commit();
+        fragmentManager.beginTransaction().add(R.id.activity_main_frame_layout, new AllGamesFragment(this, fragmentManager)).commit();
 
         handler = new Handler();
 
@@ -75,20 +76,94 @@ public class MainActivity extends AppCompatActivity {
 
 /*
     }
-
 */
-    public static class allGamesFragment extends Fragment {
-        FragmentManager fragmentManager;
+    void firstBuzzered(){
+        BuzzerFragment buzzerFragment = (BuzzerFragment) fragmentManager.findFragmentByTag(getString(R.string.buzzerFragmentTag));
+        assert buzzerFragment != null;
+        buzzerFragment.glow();
+    }
 
-        public allGamesFragment(FragmentManager fragmentManager){
-            this.fragmentManager = fragmentManager;
+    void buzzeredToSlow(){
+        runOnUiThread(() -> Toast.makeText(getBaseContext(),getString(R.string.buzzer_toSlow_Toastmessage),Toast.LENGTH_SHORT).show());
+    }
+
+    public static class BuzzerFragment extends GameFragment {
+        public BuzzerFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.fragment_buzzer);
         }
+        Handler handler;
+
+        View view;
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            view = super.onCreateView(inflater, container, savedInstanceState);
+            assert view != null;
+            final View buzzerTop = view.findViewById(R.id.buzzerImageTop);
+            float buzzerTopInitialYpos = buzzerTop.getY();
+            view.findViewById(R.id.buzzerImageBot).setOnClickListener(view1 -> {
+                Log.v("test","hi");
+                mainActivity.sendText(getString(R.string.buzzer_message));
+                long buzzerAnimationDuration = 100;
+                buzzerTop.animate().y(buzzerTopInitialYpos+50).setDuration(buzzerAnimationDuration).start();
+                Handler handler = new Handler();
+                Runnable resetBuzzer = () -> buzzerTop.animate().y(buzzerTopInitialYpos).setDuration(buzzerAnimationDuration).start();
+                handler.postDelayed(resetBuzzer, buzzerAnimationDuration);
+            });
+            handler = new Handler();
+            return view;
+        }
+
+        void glow(){
+            long glowAnimationDuration = 500;
+            View buzzerGlowView = view.findViewById(R.id.buzzerImageGlow);
+            Runnable glowAn = () -> buzzerGlowView.animate().alpha(1).setDuration(glowAnimationDuration).start();
+            Runnable glowAus = () -> buzzerGlowView.animate().alpha(0).setDuration(glowAnimationDuration).start();
+            for(int i = 0; i<5; i++){
+                handler.postDelayed(glowAn, i*1000);
+                handler.postDelayed(glowAus, i*1000+glowAnimationDuration);
+            }
+        }
+    }
+
+    public static class GameFragment extends Fragment {
+        MainActivity mainActivity;
+        FragmentManager fragmentManager;
+        int fragmentLayout;
+        public GameFragment(MainActivity mainActivity, FragmentManager fragmentManager, int fragmentLayout){
+            this.mainActivity = mainActivity;
+            this.fragmentManager = fragmentManager;
+            this.fragmentLayout = fragmentLayout;
+        }
+
         View fragmentView;
         Context context;
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            fragmentView = inflater.inflate(fragmentLayout, container, false);
+            context = getContext();
+            return fragmentView;
+        }
+    }
+
+    public static class AllGamesFragment extends Fragment {
+        MainActivity mainActivity;
+        FragmentManager fragmentManager;
+
+        Fragment buzzerFragment;
+
+
+        public AllGamesFragment(MainActivity mainActivity, FragmentManager fragmentManager){
+            this.mainActivity = mainActivity;
+            this.fragmentManager = fragmentManager;
+        }
+        View fragmentView;
+        Context context;
+        ViewGroup container;
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             fragmentView = inflater.inflate(R.layout.fragment_games, container, false);
             context = getContext();
+            this.container = container;
             return fragmentView;
         }
 
@@ -116,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
         void onBierathlonCardClick(){
             //todo
-            fragmentManager.beginTransaction().remove(this).commit();
+            //fragmentManager.beginTransaction().replace(R.id.fragment_games,new BuzzerFragment(fragmentManager)).remove(this).addToBackStack(null).commit();
         }
 
         void onWoLiegtWasCardClick(){
@@ -126,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         void onBuzzerCardClick(){
             //todo
+            fragmentManager.beginTransaction().replace(container.getId(),new BuzzerFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit();
             //findViewById(R.id.activity_main_linear_view_games).setBackgroundColor(getResources().getColor(R.color.teal_200));
         }
 

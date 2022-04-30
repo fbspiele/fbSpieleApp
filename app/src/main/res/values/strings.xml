@@ -58,7 +58,15 @@
     <string name="maincards_schaetztn_title_text">schätztn</string>
 
 
-    <string name="ping_message">ping</string>
+    <string name="connected_message">connected</string>
+    <string name="ping_message">pingRequest</string>
+    <string name="ping_response">pingResponse</string>
+    <string name="buzzer_message">buzzer</string>
+    <string name="buzzer_firstBuzzer_message">firstBuzzered</string>
+    <string name="buzzer_toSlow_message">toSlowBuzzered</string>
+    <string name="buzzer_toSlow_Toastmessage">to slow :(</string>
+
+    <string name="buzzerFragmentTag">buzzerFragmentTag</string>
 
 
 </resources>

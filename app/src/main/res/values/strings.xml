@@ -58,6 +58,9 @@
     <string name="maincards_schaetztn_title_text">schätztn</string>
 
 
+
+
+
     <string name="connected_message">connected</string>
     <string name="ping_message">pingRequest</string>
     <string name="ping_response">pingResponse</string>
@@ -68,5 +71,6 @@
 
     <string name="buzzerFragmentTag">buzzerFragmentTag</string>
 
+    <string name="mapcards_map1_titleText">map 1</string>
 
 </resources>

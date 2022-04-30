@@ -87,6 +87,42 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> Toast.makeText(getBaseContext(),getString(R.string.buzzer_toSlow_Toastmessage),Toast.LENGTH_SHORT).show());
     }
 
+
+    public static class WoLiegtWasOverviewFragment extends GameFragment {
+
+        View fragmentView;
+        Context context;
+        ViewGroup container;
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            fragmentView = inflater.inflate(R.layout.fragment_games, container, false);
+            context = getContext();
+            this.container = container;
+            return fragmentView;
+        }
+
+        public WoLiegtWasOverviewFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.layout_woliegtwas_overview);
+            this.mainActivity = mainActivity;
+            this.fragmentManager = fragmentManager;
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            LinearLayout linearLayout = (LinearLayout) view;
+
+            View map1Card = getStandardCard(context, linearLayout, getString(R.string.mapcards_map1_titleText), getResources().getColor(R.color.light_blue_700));
+            map1Card.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+        }
+    }
+
+    public static class WoLiegtWasMapFragment extends GameFragment {
+        public WoLiegtWasMapFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.layout_mapview);
+        }
+    }
+
     public static class BuzzerFragment extends GameFragment {
         public BuzzerFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
             super(mainActivity, fragmentManager, R.layout.fragment_buzzer);
@@ -149,9 +185,6 @@ public class MainActivity extends AppCompatActivity {
         MainActivity mainActivity;
         FragmentManager fragmentManager;
 
-        Fragment buzzerFragment;
-
-
         public AllGamesFragment(MainActivity mainActivity, FragmentManager fragmentManager){
             this.mainActivity = mainActivity;
             this.fragmentManager = fragmentManager;
@@ -195,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         void onWoLiegtWasCardClick(){
-            //todo
+            fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasOverviewFragment(mainActivity, fragmentManager)).addToBackStack(null).commit();
         }
 
 
@@ -213,17 +246,18 @@ public class MainActivity extends AppCompatActivity {
             //todo
         }
 
-        View getStandardCard(Context context, ViewGroup viewGroup, String titleText, int backgroundColor){
-            View inflated = LayoutInflater.from(context).inflate(R.layout.card_layout, viewGroup, false);
-            CardView card = inflated.findViewById(R.id.card_view);
-            card.setCardBackgroundColor(backgroundColor);
-            TextView title = card.findViewById(R.id.textViewTitle);
-            title.setText(titleText);
-            viewGroup.addView(inflated);        // add inflated but return card!
-            return card;
-        }
     }
 
+
+    static View getStandardCard(Context context, ViewGroup viewGroup, String titleText, int backgroundColor){
+        View inflated = LayoutInflater.from(context).inflate(R.layout.card_layout, viewGroup, false);
+        CardView card = inflated.findViewById(R.id.card_view);
+        card.setCardBackgroundColor(backgroundColor);
+        TextView title = card.findViewById(R.id.textViewTitle);
+        title.setText(titleText);
+        viewGroup.addView(inflated);        // add inflated but return card!
+        return card;
+    }
 
     CardView setUpConnectionCard(LinearLayout rootLinearView){
         View cardLayout = View.inflate(this,R.layout.card_layout,null);

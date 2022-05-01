@@ -1,6 +1,7 @@
 package com.fbspiele.fbspieleapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,6 +11,9 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,24 +22,24 @@ public class MyMapView extends MyImageView {
     final String tag = "MyImageView";
 
     //refpunkt 1 island oben links der eine pixel bei vestfirdir der nicht wasser ist (66.450192,-22.84793)
-    int refPunkt1X = 606;
-    int refPunkt1Y = 1025;
-    double refPunkt1Phi = -22.84793;
-    double refPunkt1Theta = 66.450192;
+    double refPunkt1X; //= 606;
+    double refPunkt1Y; // = 1025;
+    double refPunkt1Phi; // = -22.84793;
+    double refPunkt1Theta; // = 66.450192;
     //refpunkt 2 neuseeland der eine bei puponga/kaihoka (-40.536766,172.673168)
-    int refPunkt2X = 2831;
-    int refPunkt2Y = 2553;
-    double refPunkt2Phi = 172.673168;
-    double refPunkt2Theta = -40.536766;
+    double refPunkt2X; // = 2831;
+    double refPunkt2Y; // = 2553;
+    double refPunkt2Phi; // = 172.673168;
+    double refPunkt2Theta; // = -40.536766;
 
-    double refPicIntrinsicDimensionsX = 4953.818115234375;
-    double refPicIntrinsicDimensionsY = 3945.818115234375;
+    double refPicIntrinsicDimensionsX; // = 4953.818115234375;
+    double refPicIntrinsicDimensionsY; // = 3945.818115234375;
 
     final double BASE_MARKER_STROKE_WIDTH = 1.72;
     final double BASE_MARKER_RADIUS = 10;
 
-    double deltaX;
-    double deltaY;
+    double deltaX=0;
+    double deltaY=0;
     double deltaPhi;
     //äquator berechnen
     // theta in radian
@@ -50,9 +54,16 @@ public class MyMapView extends MyImageView {
     double aquatorY;
 
 
+    int myColor;
+
+
     void updateReferenceValues(double intrinsicPictureScaleX, double intrinsicPictureScaleY){
-        deltaX = (refPunkt2X-refPunkt1X)*intrinsicPictureScaleX;
-        deltaY = (refPunkt2Y-refPunkt1Y)*intrinsicPictureScaleY;
+        refPunkt1X *= intrinsicPictureScaleX;
+        refPunkt2X *= intrinsicPictureScaleX;
+        refPunkt1Y *= intrinsicPictureScaleY;
+        refPunkt2Y *= intrinsicPictureScaleY;
+        deltaX = refPunkt2X-refPunkt1X;
+        deltaY = refPunkt2Y-refPunkt1Y;
         deltaPhi = refPunkt2Phi-refPunkt1Phi;
         //äquator berechnen
         // theta in radian
@@ -67,6 +78,27 @@ public class MyMapView extends MyImageView {
         aquatorY = refPunkt1Y + nonScaledRef1Y*mapYscale;
     }
 
+
+    public void updateRefPunkt1(double refPunkt1X, double refPunkt1Y, double refPunkt1Phi, double refPunkt1Theta){
+        this.refPunkt1X = refPunkt1X;
+        this.refPunkt1Y = refPunkt1Y;
+        this.refPunkt1Phi = refPunkt1Phi;
+        this.refPunkt1Theta = refPunkt1Theta;
+    }
+
+    public void updateRefPunkt2(double refPunkt2X, double refPunkt2Y, double refPunkt2Phi, double refPunkt2Theta){
+        this.refPunkt2X = refPunkt2X;
+        this.refPunkt2Y = refPunkt2Y;
+        this.refPunkt2Phi = refPunkt2Phi;
+        this.refPunkt2Theta = refPunkt2Theta;
+    }
+
+    public void updateIntrinsicDimensions(double refPicIntrinsicDimensionsX, double refPicIntrinsicDimensionsY){
+        this.refPicIntrinsicDimensionsX = refPicIntrinsicDimensionsX;
+        this.refPicIntrinsicDimensionsY = refPicIntrinsicDimensionsY;
+    }
+
+
     public MyMapView(Context context, AttributeSet attrs){
         this(context,attrs,0);
     }
@@ -77,6 +109,9 @@ public class MyMapView extends MyImageView {
         super(context,attrs,defStyle);
         myMapGestureDetector = new GestureDetector(getContext(),new MyMapGestureListener());
         initializeMarkerList();
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        myColor = sharedPref.getInt(context.getString(R.string.settings_key_color),0);
     }
 
     double[] screenToKugelCoordinates(double[] screenCoords){
@@ -87,18 +122,23 @@ public class MyMapView extends MyImageView {
         return pictureToScreenCoordinates(kugelCoordsToMapCoordinates(kugelCoords));
     }
 
-    double[] kugelCoordsToMapCoordinates(double[] kugelCoords){
-        double[] mapCoords = new double[2];
-
-        //todo make this once in the beginning (when not null)
-        //todo 0 punkt passt nicht alles verschoben
+    void checkAndUpdateReferenceValues(){
         double[] intrinsicPictureDimensions = super.getIntrinsicDimensions();
-        if(intrinsicPictureDimensions!=null){
+        if(intrinsicPictureDimensions!=null && deltaX==0){
             double intrinsicPictureScaleX = intrinsicPictureDimensions[0]/refPicIntrinsicDimensionsX;
             double intrinsicPictureScaleY = intrinsicPictureDimensions[1]/refPicIntrinsicDimensionsY;
             Log.v(tag, "intrinsicPictureScaleX\t"+intrinsicPictureScaleX+"\t\tintrinsicPictureScaleY\t"+intrinsicPictureScaleY);
+            if(intrinsicPictureScaleX/intrinsicPictureScaleY<0.99 || intrinsicPictureScaleX/intrinsicPictureScaleY>1.01){
+                Log.w(tag, "intrinsicPictureScaleX != intrinsicPictureScaleY, seems that the picture was strechted in one direction");
+                Toast.makeText(getContext(),"debugging warning:\nintrinsicPictureScaleX != intrinsicPictureScaleY\nseems that the picture was strechted in one direction",Toast.LENGTH_LONG).show();
+            }
             updateReferenceValues(intrinsicPictureScaleX, intrinsicPictureScaleY);
         }
+    }
+
+    double[] kugelCoordsToMapCoordinates(double[] kugelCoords){
+        double[] mapCoords = new double[2];
+        checkAndUpdateReferenceValues();
 
         // x/phi is einfach linear also easy
         mapCoords[0] = (kugelCoords[0] - refPunkt1Phi)/(deltaPhi/deltaX) + refPunkt1X;
@@ -118,6 +158,7 @@ public class MyMapView extends MyImageView {
     }
 
     double[] mapToKugelCoordinates(double[] mapCoords){
+        checkAndUpdateReferenceValues();
         double[] kugelCoords = new double[2];
 
         // x/phi is einfach linear also easy
@@ -269,10 +310,19 @@ public class MyMapView extends MyImageView {
         return markerPath;
     }
 
+    Marker myMarker;
+    Marker mySendMarker;
+
+    public double[] getMyMarkerKugelCoords(){
+        return myMarker.getKugelCoords();
+    }
+
     class Marker{
         double[] kugelCoords;
         Paint paint;
         Path markerPath;
+        int markerId = -1; // 0 = my active marker (of this phone), 1 = my send answer marker, 2 = right answer marker, 3 = nähester marker, -1 non specified
+
         Marker(double[] kugelcoords, int color){
             this.kugelCoords = kugelcoords;
             paint = new Paint();
@@ -296,16 +346,6 @@ public class MyMapView extends MyImageView {
 
     void initializeMarkerList(){
         markerList = new ArrayList<>();
-        Paint testPaint = new Paint();
-        testPaint.setStyle(Paint.Style.STROKE);
-        testPaint.setColor(Color.RED);
-        testPaint.setStrokeWidth(3);
-        Marker markerNullNull = new Marker(new double[] {0,0}, Color.GRAY);
-        markerList.add(markerNullNull);
-        Marker markerNullNull2 = new Marker(new double[] {0,0}, Color.GRAY);
-        markerList.add(markerNullNull2);
-        Marker markerNullNull3 = new Marker(new double[] {0,0}, Color.GRAY);
-        markerList.add(markerNullNull3);
     }
 
 
@@ -317,20 +357,28 @@ public class MyMapView extends MyImageView {
 
     public void singleClick(MotionEvent ev){
         double[] down = {ev.getX(),ev.getY()};
-        markerList.add(1, new Marker(screenToKugelCoordinates(down),Color.RED));
-        markerList = markerList.subList(0,3);
-        markerList.get(2).setColor(Color.BLUE);
 
-        circlePath = new CirlcePath(markerList.get(1).getKugelCoords(), calcDegAngleBetweenCoords(markerList.get(1).getKugelCoords(),markerList.get(2).getKugelCoords()));
+        myMarker = new Marker(screenToKugelCoordinates(down), myColor);
+        myMarker.markerId = 0;
 
-        TextView testTextView = getRootView().findViewById(R.id.testTextView);
-        try {
-            String text = calcDistanceBetweenCoords(markerList.get(0).getKugelCoords(), markerList.get(1).getKugelCoords()) + "\n" + calcDistanceBetweenCoords(markerList.get(0).getKugelCoords(), markerList.get(2).getKugelCoords()) + "\n" + calcDistanceBetweenCoords(markerList.get(1).getKugelCoords(), markerList.get(2).getKugelCoords());
-            testTextView.setText(text);
+        for(Marker marker:markerList){
+            if(marker.markerId==0){
+                markerList.remove(marker);
+            }
         }
-        catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
-        }
+        markerList.add(myMarker);
+
+
+        //circlePath = new CirlcePath(markerList.get(1).getKugelCoords(), calcDegAngleBetweenCoords(markerList.get(1).getKugelCoords(),markerList.get(2).getKugelCoords()));
+
+        //TextView testTextView = getRootView().findViewById(R.id.testTextView);
+        //try {
+            //String text = calcDistanceBetweenCoords(markerList.get(0).getKugelCoords(), markerList.get(1).getKugelCoords()) + "\n" + calcDistanceBetweenCoords(markerList.get(0).getKugelCoords(), markerList.get(2).getKugelCoords()) + "\n" + calcDistanceBetweenCoords(markerList.get(1).getKugelCoords(), markerList.get(2).getKugelCoords());
+            //testTextView.setText(text);
+        //}
+        //catch (IndexOutOfBoundsException e){
+        //    e.printStackTrace();
+        //}
         /*
         if(myMarker==null){
             myMarker = new Marker(screenToKugelCoordinates(down),Color.GRAY);

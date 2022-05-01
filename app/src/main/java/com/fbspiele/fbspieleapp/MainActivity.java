@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -107,19 +109,140 @@ public class MainActivity extends AppCompatActivity {
             this.fragmentManager = fragmentManager;
         }
 
+
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             LinearLayout linearLayout = (LinearLayout) view;
 
-            View map1Card = getStandardCard(context, linearLayout, getString(R.string.mapcards_map1_titleText), getResources().getColor(R.color.light_blue_700));
-            map1Card.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+            View mapCardWorld = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapWorld_titleText), getResources().getColor(R.color.light_blue_200));
+            mapCardWorld.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapWorldFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+
+            View mapCardDeutschland = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapDeutschland_titleText), getResources().getColor(R.color.green_200));
+            mapCardDeutschland.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapDeutschlandFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+
+            View mapCardHamburg = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapHamburg_titleText), getResources().getColor(R.color.deep_orange_200));
+            mapCardHamburg.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapHamburgFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
         }
     }
 
+
     public static class WoLiegtWasMapFragment extends GameFragment {
-        public WoLiegtWasMapFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
-            super(mainActivity, fragmentManager, R.layout.layout_mapview);
+
+        double refPunkt1X;
+        double refPunkt1Y;
+        double refPunkt1Phi;
+        double refPunkt1Theta;
+
+        double refPunkt2X;
+        double refPunkt2Y;
+        double refPunkt2Phi;
+        double refPunkt2Theta;
+
+        double refPicIntrinsicDimensionsX;
+        double refPicIntrinsicDimensionsY;
+
+        public void updateRefPunkt1(double refPunkt1X, double refPunkt1Y, double refPunkt1Phi, double refPunkt1Theta){
+            this.refPunkt1X = refPunkt1X;
+            this.refPunkt1Y = refPunkt1Y;
+            this.refPunkt1Phi = refPunkt1Phi;
+            this.refPunkt1Theta = refPunkt1Theta;
+        }
+
+        public void updateRefPunkt2(double refPunkt2X, double refPunkt2Y, double refPunkt2Phi, double refPunkt2Theta){
+            this.refPunkt2X = refPunkt2X;
+            this.refPunkt2Y = refPunkt2Y;
+            this.refPunkt2Phi = refPunkt2Phi;
+            this.refPunkt2Theta = refPunkt2Theta;
+        }
+
+        public void updateIntrinsicDimensions(double refPicIntrinsicDimensionsX, double refPicIntrinsicDimensionsY){
+            this.refPicIntrinsicDimensionsX = refPicIntrinsicDimensionsX;
+            this.refPicIntrinsicDimensionsY = refPicIntrinsicDimensionsY;
+        }
+
+        public WoLiegtWasMapFragment(MainActivity mainActivity, FragmentManager fragmentManager, int LayoutId) {
+            super(mainActivity, fragmentManager, LayoutId);
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = super.onCreateView(inflater, container, savedInstanceState);
+            assert view != null;
+            MyMapView mapView = view.findViewById(R.id.mapImage);
+            mapView.updateRefPunkt1(refPunkt1X, refPunkt1Y, refPunkt1Phi, refPunkt1Theta);
+            mapView.updateRefPunkt2(refPunkt2X, refPunkt2Y, refPunkt2Phi, refPunkt2Theta);
+            mapView.updateIntrinsicDimensions(refPicIntrinsicDimensionsX, refPicIntrinsicDimensionsY);
+
+            Button reset = view.findViewById(R.id.reset);
+            reset.setOnClickListener(view1 -> {
+                mapView.initializeMarkerList();
+                mapView.resetScaleTranslate();
+            });
+
+            Button confirm = view.findViewById(R.id.confirm);
+            confirm.setOnClickListener(view1 -> {
+                mapView.initializeMarkerList();
+                if(mapView.myMarker==null){
+                    Toast.makeText(context, "place a marker first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mapView.mySendMarker = mapView.myMarker;
+                mapView.mySendMarker.setColor(Color.parseColor("#B0BEC5"));
+                mapView.mySendMarker.markerId = 1;
+                mapView.markerList.add(mapView.mySendMarker);
+                mainActivity.sendText(getSendMyCoordsText(mapView.getMyMarkerKugelCoords(), mapView.myColor));
+                mapView.invalidate();
+            });
+
+            Button cancel = view.findViewById(R.id.cancel);
+            cancel.setOnClickListener(view1 -> {
+                if(mapView.mySendMarker==null){
+                    Toast.makeText(context, "nothing to cancel here", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(mapView.mySendMarker!=mapView.myMarker){
+                    mapView.markerList.remove(mapView.myMarker);
+                }
+                mapView.myMarker.kugelCoords = mapView.mySendMarker.getKugelCoords();
+                mapView.invalidate();
+            });
+
+            return view;
+        }
+
+        String getSendMyCoordsText(double[] coords, int Color){
+            return "woLiegtWas" +
+                    "MyCoordsPhiABC" + coords[0] + "DEF" +
+                    "myCoordsThetaGHI" + coords[1] + "JKL" +
+                    "myColorMNO" + coords[1] + "PQR";
+        }
+    }
+
+    public static class WoLiegtWasMapWorldFragment extends WoLiegtWasMapFragment {
+        public WoLiegtWasMapWorldFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.layout_mapview_world);
+            super.updateIntrinsicDimensions(17658.544921875, 12288.0);
+            super.updateRefPunkt1(3213.715731672285, 655.465400201688, -74.312326, 83.083284);
+            super.updateRefPunkt2(7411.006265461198, 9238.037382160866, 48.726532, -66.793219);
+        }
+    }
+
+    public static class WoLiegtWasMapDeutschlandFragment extends WoLiegtWasMapFragment {
+        public WoLiegtWasMapDeutschlandFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.layout_mapview_deutschland);
+            super.updateIntrinsicDimensions(6252.0, 7626.545654296875);
+            super.updateRefPunkt1(1289.9882542101989, 1492.4257898263718, 7.101430, 53.681416);
+            super.updateRefPunkt2(5386.46252088853, 6938.988192356576, 14.598883, 47.353683);
+        }
+    }
+
+    public static class WoLiegtWasMapHamburgFragment extends WoLiegtWasMapFragment {
+        public WoLiegtWasMapHamburgFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.layout_mapview_hamburg);
+            super.updateIntrinsicDimensions(7136.7275390625, 7664.7275390625);
+            super.updateRefPunkt1(898.1525844016661, 627.4686514970464, 9.829585, 53.635658);
+            super.updateRefPunkt2(5777.7116473597425, 6885.483791873342, 10.108871, 53.422679);
         }
     }
 

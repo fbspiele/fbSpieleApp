@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">fbSpieleApp</string>
 
 
@@ -71,6 +71,14 @@
 
     <string name="buzzerFragmentTag">buzzerFragmentTag</string>
 
-    <string name="mapcards_map1_titleText">map 1</string>
+    <string name="mapcards_mapWorld_titleText">world</string>
+    <string name="mapcards_mapDeutschland_titleText">germany</string>
+    <string name="mapcards_mapHamburg_titleText">hamburg</string>
+
+    <string name="mapbutton_title_resetView">reset view</string>
+    <string name="mapbutton_title_confirm">confirm</string>
+    <string name="mapbutton_title_cancel" tools:ignore="ButtonCase">cancel</string>
+
+
 
 </resources>

@@ -112,6 +112,9 @@ public class MyMapView extends MyImageView {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         myColor = sharedPref.getInt(context.getString(R.string.settings_key_color),0);
+        if(myColor==0){
+            Toast.makeText(context, "you havent choosen your color yet, go into settings and change it", Toast.LENGTH_LONG).show();
+        }
     }
 
     double[] screenToKugelCoordinates(double[] screenCoords){

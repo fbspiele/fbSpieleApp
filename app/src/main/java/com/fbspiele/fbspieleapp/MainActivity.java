@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 mapView.mySendMarker.setColor(Color.parseColor("#B0BEC5"));
                 mapView.mySendMarker.markerId = 1;
                 mapView.markerList.add(mapView.mySendMarker);
-                mainActivity.sendText(getSendMyCoordsText(mapView.getMyMarkerKugelCoords(), mapView.myColor));
+                mainActivity.sendText(getSendMyCoordsText(mapView.getMyMarkerKugelCoords()));
                 mapView.invalidate();
             });
 
@@ -211,11 +211,10 @@ public class MainActivity extends AppCompatActivity {
             return view;
         }
 
-        String getSendMyCoordsText(double[] coords, int Color){
+        String getSendMyCoordsText(double[] coords){
             return "woLiegtWas" +
                     "MyCoordsPhiABC" + coords[0] + "DEF" +
-                    "myCoordsThetaGHI" + coords[1] + "JKL" +
-                    "myColorMNO" + coords[1] + "PQR";
+                    "myCoordsThetaGHI" + coords[1] + "JKL";
         }
     }
 

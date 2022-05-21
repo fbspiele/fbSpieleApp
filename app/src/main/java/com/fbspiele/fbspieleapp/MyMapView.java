@@ -202,7 +202,7 @@ public class MyMapView extends MyImageView {
     }
 
     double calcDistanceBetweenCoords(double[] kugelCoordinates1, double[] kugelCoordinates2){
-        double earthRadius = 6371.000785; //in km; mittlerer radius (volumengleiche kugel aus https://de.wikipedia.org/wiki/Erdradius
+        double earthRadius = 6371.000785; //in km; mittlerer radius (volumengleiche kugel aus https://de.wikipedia.org/wiki/Erdradius)
         return earthRadius * calcRadAngleBetweenCoords(kugelCoordinates1, kugelCoordinates2);
     }
 

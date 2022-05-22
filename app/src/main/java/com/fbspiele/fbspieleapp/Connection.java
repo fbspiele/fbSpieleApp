@@ -17,13 +17,11 @@ class Connection implements Runnable {
     Socket socket;
     Connectivity connectivity;
 
-    String save_eintrage_trenner;
 
     Connection(MainActivity mainActivity, Connectivity connectivity, Crypto crypto){
         this.mainActivity = mainActivity;
         this.connectivity = connectivity;
         this.crypto = crypto;
-        save_eintrage_trenner = getString(R.string.settings_key_eintrageTrenner);
     }
 
     @Override
@@ -106,12 +104,6 @@ class Connection implements Runnable {
     }
 
     private void fbsocketdataverarbeiten(String message){
-        if(message.contains(save_eintrage_trenner)){
-            String[] parts = message.split(save_eintrage_trenner,2);
-            fbsocketdataverarbeiten(parts[0]);
-            fbsocketdataverarbeiten(parts[1]);
-            return;
-        }
         Log.v(tag,message);
         if(message.contains(getString(R.string.connected_message))){
             connectivity.connected();
@@ -124,6 +116,12 @@ class Connection implements Runnable {
         }
         if(message.contains(getString(R.string.buzzer_toSlow_message))){
             mainActivity.buzzeredToSlow();
+        }
+        if(message.contains(getString(R.string.woliegtwas_woLiegtWasAuflosungStart))){
+            int startIndex = message.indexOf(getString(R.string.woliegtwas_woLiegtWasAuflosungStart))+getString(R.string.woliegtwas_woLiegtWasAuflosungStart).length();
+            int endIndex = message.indexOf(getString(R.string.woliegtwas_woLiegtWasAuflosungEnd));
+            String auflosungsMessage = message.substring(startIndex,endIndex);
+            mainActivity.woLiegtWasAuflosungFromText(auflosungsMessage);
         }
     }
 

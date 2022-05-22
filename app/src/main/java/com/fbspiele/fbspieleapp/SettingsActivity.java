@@ -17,9 +17,11 @@ import android.widget.ResourceCursorAdapter;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.DropDownPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -27,6 +29,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -157,6 +160,40 @@ public class SettingsActivity extends AppCompatActivity {
                 return false;
             });
 
+            EditTextPreference namePref = findPreference(getString(R.string.settings_key_name));
+            assert namePref != null;
+            namePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(getString(R.string.settings_key_name),newValue.toString()).apply();
+                MainActivity.sendNameUpdate(getContext());
+                return true;
+            });
+
+            DropDownPreference teamPref = findPreference(getString(R.string.settings_key_team));
+            assert teamPref != null;
+            teamPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+                    int newTeamInt = 0;
+                    if (newValue.toString().length()>0){
+                        newTeamInt = Integer.parseInt(newValue.toString());
+                    }
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putInt(getString(R.string.settings_key_team_int),newTeamInt).apply();
+                    MainActivity.sendTeamUpdate(getContext());
+                    return true;
+                }
+            });
+
+            DropDownPreference rolePref = findPreference(getString(R.string.settings_key_role));
+            assert rolePref != null;
+            rolePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
+                    PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(getString(R.string.settings_key_role),newValue.toString()).apply();
+                    MainActivity.sendRoleUpdate(getContext());
+                    return true;
+                }
+            });
+
             final Context context = getContext();
             Preference colorPref = findPreference(getString(R.string.settings_key_color));
             assert colorPref != null;
@@ -169,7 +206,14 @@ public class SettingsActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("choose your color")
                         .setView(scrollView)
-                        .setPositiveButton("close", (dialog, which) -> dialog.dismiss());
+                        .setPositiveButton("ok", (dialog, which) -> {
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                            int intColor = sharedPreferences.getInt(getString(R.string.settings_key_color),0);
+                            String hexColor = String.format("#%06X", (0xFFFFFF & intColor));
+                            sharedPreferences.edit().putString(getString(R.string.settings_key_color_hex),hexColor).apply();
+                            MainActivity.sendColorUpdate(getContext());
+                            dialog.dismiss();
+                        });
                 builder.create().show();
                 return false;
             });

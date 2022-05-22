@@ -1,27 +1,27 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="connection">
+    <PreferenceCategory android:title="connection">
 
         <EditTextPreference
-            app:key="@string/settings_key_ipAddress"
-            app:title="@string/settings_title_ipAddress"
+            android:key="@string/settings_key_ipAddress"
+            android:title="@string/settings_title_ipAddress"
             app:useSimpleSummaryProvider="true"
             android:inputType="number"
             android:digits="0123456789." />
 
 
         <EditTextPreference
-            app:key="@string/settings_key_password"
-            app:title="@string/settings_title_password"
+            android:key="@string/settings_key_password"
+            android:title="@string/settings_title_password"
             app:useSimpleSummaryProvider="true"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:inputType="textPassword" />
 
         <EditTextPreference
-            app:key="@string/settings_key_salt"
-            app:title="@string/settings_title_salt"
+            android:key="@string/settings_key_salt"
+            android:title="@string/settings_title_salt"
             app:useSimpleSummaryProvider="true"
             android:selectAllOnFocus="true"
             android:singleLine="true"
@@ -29,16 +29,31 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="game">
+    <PreferenceCategory android:title="game">
 
         <EditTextPreference
-            app:key="@string/settings_key_name"
-            app:title="@string/settings_title_name"
+            android:key="@string/settings_key_name"
+            android:title="@string/settings_title_name"
             app:useSimpleSummaryProvider="true" />
 
         <Preference
-            app:key="@string/settings_key_color"
-            app:title="@string/settings_title_color" />
+            android:key="@string/settings_key_color"
+            android:title="@string/settings_title_color"
+            app:useSimpleSummaryProvider="true"  />
+
+        <DropDownPreference
+            android:key="@string/settings_key_team"
+            android:title="@string/settings_title_team"
+            android:entries="@array/teams_entries"
+            android:entryValues="@array/teams_entries"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            android:key="@string/settings_key_role"
+            android:title="@string/settings_title_role"
+            android:entries="@array/role_entries"
+            android:entryValues="@array/role_entries"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

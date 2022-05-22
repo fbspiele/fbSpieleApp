@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
@@ -243,6 +242,86 @@ public class MyMapView extends MyImageView {
         return kugelToScreenCoordinates(getGlobalCircleCoords(circleMiddleCoordsDeg,radiusDeg,circleParamter, positionX));
     }
 
+    void auflosungFromText(String auflosungsText){
+        String entrySplitter = getContext().getString(R.string.woliegtwas_entrySendTextGenerelSplitter);
+        String[] splitted = auflosungsText.split(entrySplitter);
+
+        Context context = getContext();
+        String phiStartString = context.getString(R.string.woliegtwas_entrySendTextPhiStart);
+        String phiEndString = context.getString(R.string.woliegtwas_entrySendTextPhiEnd);
+        String thetaStartString = context.getString(R.string.woliegtwas_entrySendTextThetaStart);
+        String thetaEndString = context.getString(R.string.woliegtwas_entrySendTextThetaEnd);
+        String colorStartString = context.getString(R.string.woliegtwas_entrySendTextColorStart);
+        String colorEndString = context.getString(R.string.woliegtwas_entrySendTextColorEnd);
+        String extraStartString = context.getString(R.string.woliegtwas_entrySendTextExtraStart);
+        String extraEndString = context.getString(R.string.woliegtwas_entrySendTextExtraEnd);
+
+        String extraClosestEntry = context.getString(R.string.woliegtwas_entrySendTextExtraClosest);
+        String extraRightAnswer = context.getString(R.string.woliegtwas_entrySendTextExtraRightAnswer);
+
+        double[] rightCoords = null;
+        double[] closestCoords = null;
+        int closestCircleColor = 0;
+        int rightCircleColor = 0;
+        for (String entry : splitted) {
+            String phiString = extractSubstring(entry, phiStartString, phiEndString);
+            String thetaString = extractSubstring(entry, thetaStartString, thetaEndString);
+            String colorString = extractSubstring(entry, colorStartString, colorEndString);
+            String extraString = extractSubstring(entry, extraStartString, extraEndString);
+            if (phiString.length() > 0 && thetaString.length() > 0 && colorString.length() > 0) {
+                double[] coords = {Double.parseDouble(phiString), Double.parseDouble(thetaString)};
+                int color = Color.parseColor(colorString);
+                if (extraString.contains(extraRightAnswer)) {
+                    rightCoords = coords;
+                    rightCircleColor = color;
+                }
+                if (extraString.contains(extraClosestEntry)) {
+                    closestCoords = coords;
+                    closestCircleColor = color;
+                }
+                Marker marker = new Marker(coords, color);
+                markerList.add(marker);
+            }
+        }
+        if(closestCircleColor == 0){
+            closestCircleColor = Color.parseColor("#000000");
+        }
+        if(rightCircleColor == 0){
+            closestCircleColor = Color.parseColor("#000000");
+        }
+        circleList = new ArrayList<>();
+        if(closestCoords!=null){
+            Circle closestCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,closestCoords),closestCircleColor);
+            circleList.add(closestCircle);
+        }
+        if(mySendMarker!=null){
+            Circle myCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,mySendMarker.kugelCoords),closestCircleColor);
+            circleList.add(myCircle);
+        }
+        invalidate();
+    }
+
+    String extractSubstring(String message, String beginningKey, String endKey){
+        int indexStart = message.indexOf(beginningKey);
+        int indexEnd = message.indexOf(endKey);
+        Log.w(tag,"ges message\n"+message);
+        if(indexStart < 0){
+            Log.w(tag,"extractSubstring\nstart string not found");
+            return "";
+        }
+        if(indexEnd < 0){
+            Log.w(tag,"extractSubstring\nend string not found");
+            return "";
+        }
+        if(indexStart+beginningKey.length()<=indexEnd){
+            Log.v(tag,"extractSubstring\tresult\n"+message.substring(indexStart+beginningKey.length(),indexEnd));
+            return message.substring(indexStart+beginningKey.length(),indexEnd);
+        }
+        Log.v(tag,"extractSubstring\nno case matched");
+        return "";
+    }
+
+
     Path getCirclePathAroundKugelCoord(double[] kugelCoordsCenter, double radiusDeg){
         Path path = new Path();
         // vielleicht noch verbessern(eventuell todo): bei allen 0 durchgängen ist ne lücke da der ja immer springt dort vielleicht kann ich das verbessern is aber nicht so schlimm
@@ -288,14 +367,19 @@ public class MyMapView extends MyImageView {
         return path;
     }
 
-    CirlcePath circlePath;
-    class CirlcePath{
+
+    class Circle{
         Path path;
+        Paint paint;
         double[] centerCoords;
         double radiusDegrees;
-        CirlcePath(double[] kugelCoordsCenter, double radiusDeg){
+        Circle(double[] kugelCoordsCenter, double radiusDeg, int color){
             centerCoords = kugelCoordsCenter;
             radiusDegrees = radiusDeg;
+            paint = new Paint();
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(color);
+            paint.setStrokeWidth(strokeWidth);
         }
 
         public Path getCirclePath() {
@@ -319,6 +403,7 @@ public class MyMapView extends MyImageView {
     public double[] getMyMarkerKugelCoords(){
         return myMarker.getKugelCoords();
     }
+
 
     class Marker{
         double[] kugelCoords;
@@ -356,7 +441,7 @@ public class MyMapView extends MyImageView {
 
 
     List<Marker> markerList;
-
+    List<Circle> circleList;
 
     public void singleClick(MotionEvent ev){
         double[] down = {ev.getX(),ev.getY()};
@@ -436,8 +521,13 @@ public class MyMapView extends MyImageView {
             canvas.drawPath(markerList.get(i).getPath(),markerList.get(i).paint);
         }
 
-        if(circlePath!=null){
-            canvas.drawPath(circlePath.getCirclePath(), markerList.get(1).paint);
+
+        if(circleList!=null){
+            if(circleList.size()>0){
+                for(Circle circle:circleList){
+                    canvas.drawPath(circle.getCirclePath(),circle.paint);
+                }
+            }
         }
 
     }

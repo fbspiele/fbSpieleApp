@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     final static String tag = "mainActivity";
     CardView connectionCard;
     boolean connected = false;
-    Connectivity connectivity;
+    static Connectivity connectivity;
 
     Handler handler;
 
@@ -64,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
     void onConnect(){
         connected = true;
         resetConnectionStatus();
+
+        sendNameUpdate(this);
+        sendColorUpdate(this);
+        sendTeamUpdate(this);
+        sendRoleUpdate(this);
     }
 
     void onDisconnect(){
@@ -89,6 +96,14 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(() -> Toast.makeText(getBaseContext(),getString(R.string.buzzer_toSlow_Toastmessage),Toast.LENGTH_SHORT).show());
     }
 
+
+    final static String woLiegtWasFragmentTag = "woLiegtWasFragmentTag";
+    void woLiegtWasAuflosungFromText(String text){
+        if(WoLiegtWasMapFragment.mapView!=null){
+            WoLiegtWasMapFragment.mapView.auflosungFromText(text);
+        }
+
+    }
 
     public static class WoLiegtWasOverviewFragment extends GameFragment {
 
@@ -116,13 +131,22 @@ public class MainActivity extends AppCompatActivity {
             LinearLayout linearLayout = (LinearLayout) view;
 
             View mapCardWorld = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapWorld_titleText), getResources().getColor(R.color.light_blue_200));
-            mapCardWorld.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapWorldFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+            WoLiegtWasMapWorldFragment woLiegtWasMapWorldFragment = new WoLiegtWasMapWorldFragment(mainActivity, fragmentManager);
+            mapCardWorld.setOnClickListener(view1 -> {
+                fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapWorldFragment, woLiegtWasFragmentTag).addToBackStack(null).commit();
+            });
 
-            View mapCardDeutschland = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapDeutschland_titleText), getResources().getColor(R.color.green_200));
-            mapCardDeutschland.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapDeutschlandFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+            View mapCardDeutschland = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapDeutschland_titleText), getResources().getColor(R.color.green_200));;
+            WoLiegtWasMapDeutschlandFragment woLiegtWasMapDeutschlandFragment = new WoLiegtWasMapDeutschlandFragment(mainActivity, fragmentManager);
+            mapCardDeutschland.setOnClickListener(view1 -> {
+                fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapDeutschlandFragment, woLiegtWasFragmentTag).addToBackStack(null).commit();
+            });
 
             View mapCardHamburg = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapHamburg_titleText), getResources().getColor(R.color.deep_orange_200));
-            mapCardHamburg.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(),new WoLiegtWasMapHamburgFragment(mainActivity, fragmentManager), getString(R.string.buzzerFragmentTag)).addToBackStack(null).commit());
+            WoLiegtWasMapHamburgFragment woLiegtWasMapHamburgFragment = new WoLiegtWasMapHamburgFragment(mainActivity, fragmentManager);
+            mapCardHamburg.setOnClickListener(view1 -> {
+                fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapHamburgFragment, woLiegtWasFragmentTag).addToBackStack(null).commit();
+            });
         }
     }
 
@@ -141,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
 
         double refPicIntrinsicDimensionsX;
         double refPicIntrinsicDimensionsY;
+
+        static MyMapView mapView;
 
         public void updateRefPunkt1(double refPunkt1X, double refPunkt1Y, double refPunkt1Phi, double refPunkt1Theta){
             this.refPunkt1X = refPunkt1X;
@@ -169,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             assert view != null;
-            MyMapView mapView = view.findViewById(R.id.mapImage);
+            mapView = view.findViewById(R.id.mapImage);
             mapView.updateRefPunkt1(refPunkt1X, refPunkt1Y, refPunkt1Phi, refPunkt1Theta);
             mapView.updateRefPunkt2(refPunkt2X, refPunkt2Y, refPunkt2Phi, refPunkt2Theta);
             mapView.updateIntrinsicDimensions(refPicIntrinsicDimensionsX, refPicIntrinsicDimensionsY);
@@ -216,6 +242,9 @@ public class MainActivity extends AppCompatActivity {
                     "MyCoordsPhiABC" + coords[0] + "DEF" +
                     "myCoordsThetaGHI" + coords[1] + "JKL";
         }
+
+
+
     }
 
     public static class WoLiegtWasMapWorldFragment extends WoLiegtWasMapFragment {
@@ -371,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     static View getStandardCard(Context context, ViewGroup viewGroup, String titleText, int backgroundColor){
         View inflated = LayoutInflater.from(context).inflate(R.layout.card_layout, viewGroup, false);
         CardView card = inflated.findViewById(R.id.card_view);
@@ -445,7 +475,32 @@ public class MainActivity extends AppCompatActivity {
         connectivity.fbconnecttoserver();
     }
 
-    void sendText(String message){
+
+
+    static void sendNameUpdate(Context context){
+        String name = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.settings_key_name),"");
+        sendText(context.getString(R.string.sendText_newNameAnfangString)+name+context.getString(R.string.sendText_newNameEndString));
+    }
+
+    static void sendColorUpdate(Context context){
+        String colorHex = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.settings_key_color_hex),"");
+        sendText(context.getString(R.string.sendText_newColorAnfangString)+colorHex+context.getString(R.string.sendText_newColorEndString));
+    }
+
+
+    static void sendTeamUpdate(Context context){
+        int team = PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.settings_key_team_int),0);
+        sendText(context.getString(R.string.sendText_newTeamAnfangString)+team+context.getString(R.string.sendText_newTeamEndString));
+    }
+
+
+    static void sendRoleUpdate(Context context){
+        String role = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.settings_key_role),"");
+        sendText(context.getString(R.string.sendText_newRoleAnfangString)+role+context.getString(R.string.sendText_newRoleEndString));
+    }
+
+
+    static void sendText(String message){
         // just connectivity.fbsendtosocket(message); leads to android.os.NetworkOnMainThreadException so detour over new thread even though it seems to work in win10control
         new Thread(() -> connectivity.fbsendtosocket(message)).start();
     }

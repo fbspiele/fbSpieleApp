@@ -33,13 +33,22 @@
 
     <string name="settings_key_name">settings_key_name</string>
     <string name="settings_title_name">name</string>
+
     <string name="settings_key_color">settings_key_color</string>
+    <string name="settings_key_color_hex">settings_key_color_hex</string>
     <string name="settings_title_color">color</string>
+
+    <string name="settings_key_team">settings_key_team</string>
+    <string name="settings_key_team_int">settings_key_team_int</string>
+    <string name="settings_title_team">team</string>
+
+    <string name="settings_key_role">settings_key_role</string>
+    <string name="settings_title_role">role</string>
 
     <string name="settings_key_autoReconnect">settings_key_autoReconnect</string>
     <string name="settings_title_autoReconnect">automatically try to reconnect to server</string>
 
-    <string name="settings_key_eintrageTrenner">xxx</string>
+
 
 
 
@@ -79,6 +88,47 @@
     <string name="mapbutton_title_confirm">confirm</string>
     <string name="mapbutton_title_cancel" tools:ignore="ButtonCase">cancel</string>
 
+
+
+    <string name="sendText_newNameAnfangString">myNewName</string>
+    <string name="sendText_newNameEndString">endMyNewName</string>
+
+    <string name="sendText_newColorAnfangString">myNewColor</string>
+    <string name="sendText_newColorEndString">endMyNewColor</string>
+
+    <string name="sendText_newTeamAnfangString">myNewTeam</string>
+    <string name="sendText_newTeamEndString">endMyNewTeam</string>
+
+    <string name="sendText_newRoleAnfangString">myNewRole</string>
+    <string name="sendText_newRoleEndString">endMyNewRole</string>
+
+
+
+
+
+
+
+
+    <string name="woliegtwas_woLiegtWasAuflosungStart">woLiegtWasAuflosungStart</string>
+    <string name="woliegtwas_woLiegtWasAuflosungEnd">woLiegtWasAuflosungEnd</string>
+
+    <string name="woliegtwas_entrySendTextGenerelSplitter">entrySendTextGenerelSplitter</string>
+
+    <string name="woliegtwas_entrySendTextPhiStart">entrySendTextPhiStart</string>
+    <string name="woliegtwas_entrySendTextPhiEnd">entrySendTextPhiEnd</string>
+    <string name="woliegtwas_entrySendTextThetaStart">entrySendTextThetaStart</string>
+    <string name="woliegtwas_entrySendTextThetaEnd">entrySendTextThetaEnd</string>
+    <string name="woliegtwas_entrySendTextColorStart">entrySendTextColorStart</string>
+    <string name="woliegtwas_entrySendTextColorEnd">entrySendTextColorEnd</string>
+    <string name="woliegtwas_entrySendTextExtraStart">entrySendTextExtraStart</string>
+    <string name="woliegtwas_entrySendTextExtraEnd">entrySendTextExtraEnd</string>
+
+    <string name="woliegtwas_entrySendTextExtraRightAnswer">entrySendTextExtraRightAnswer</string>
+    <string name="woliegtwas_entrySendTextExtraClosest">entrySendTextExtraClosest</string>
+
+
+
+    <string name="woliegtwas_closestGuessSendText">closestGuessSendText</string>
 
 
 </resources>

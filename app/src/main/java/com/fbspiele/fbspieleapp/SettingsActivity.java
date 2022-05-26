@@ -25,6 +25,7 @@ import androidx.preference.DropDownPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -113,6 +114,13 @@ public class SettingsActivity extends AppCompatActivity {
                 return false;
             });
 
+            SwitchPreference prefAutoReconnect = findPreference(getString(R.string.settings_key_autoReconnect));
+            assert prefAutoReconnect != null;
+            prefAutoReconnect.setDefaultValue(sharedPref.getBoolean(getString(R.string.settings_key_autoReconnect),true));
+            prefAutoReconnect.setOnPreferenceChangeListener((preference, newValue) -> {
+                sharedPref.edit().putBoolean(getString(R.string.settings_key_autoReconnect), Boolean.parseBoolean(newValue.toString())).apply();
+                return true;
+            });
         }
     }
 

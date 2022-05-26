@@ -291,12 +291,16 @@ public class MyMapView extends MyImageView {
         }
         circleList = new ArrayList<>();
         if(closestCoords!=null){
-            Circle closestCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,closestCoords),closestCircleColor);
-            circleList.add(closestCircle);
+            if(rightCoords!=null){
+                Circle closestCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,closestCoords),closestCircleColor);
+                circleList.add(closestCircle);
+            }
         }
         if(mySendMarker!=null){
-            Circle myCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,mySendMarker.kugelCoords),closestCircleColor);
-            circleList.add(myCircle);
+            if(rightCoords!=null){
+                Circle myCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,mySendMarker.kugelCoords),closestCircleColor);
+                circleList.add(myCircle);
+            }
         }
         invalidate();
     }

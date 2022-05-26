@@ -15,4 +15,10 @@
         app:key="@string/settings_title_color"
         app:title="@string/settings_title_color"
         app:defaultValue="true"/>
+
+
+    <SwitchPreference
+        app:key="@string/settings_key_autoReconnect"
+        app:title="@string/settings_title_autoReconnect"/>
+
 </PreferenceScreen>

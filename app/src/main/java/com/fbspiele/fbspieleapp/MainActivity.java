@@ -10,7 +10,6 @@ import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -137,21 +136,15 @@ public class MainActivity extends AppCompatActivity {
 
             View mapCardWorld = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapWorld_titleText), getResources().getColor(R.color.light_blue_200));
             WoLiegtWasMapWorldFragment woLiegtWasMapWorldFragment = new WoLiegtWasMapWorldFragment(mainActivity, fragmentManager);
-            mapCardWorld.setOnClickListener(view1 -> {
-                fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapWorldFragment, woLiegtWasFragmentTag).addToBackStack(null).commit();
-            });
+            mapCardWorld.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapWorldFragment, woLiegtWasFragmentTag).addToBackStack(null).commit());
 
-            View mapCardDeutschland = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapDeutschland_titleText), getResources().getColor(R.color.green_200));;
+            View mapCardDeutschland = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapDeutschland_titleText), getResources().getColor(R.color.green_200));
             WoLiegtWasMapDeutschlandFragment woLiegtWasMapDeutschlandFragment = new WoLiegtWasMapDeutschlandFragment(mainActivity, fragmentManager);
-            mapCardDeutschland.setOnClickListener(view1 -> {
-                fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapDeutschlandFragment, woLiegtWasFragmentTag).addToBackStack(null).commit();
-            });
+            mapCardDeutschland.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapDeutschlandFragment, woLiegtWasFragmentTag).addToBackStack(null).commit());
 
             View mapCardHamburg = getStandardCard(context, linearLayout, getString(R.string.mapcards_mapHamburg_titleText), getResources().getColor(R.color.deep_orange_200));
             WoLiegtWasMapHamburgFragment woLiegtWasMapHamburgFragment = new WoLiegtWasMapHamburgFragment(mainActivity, fragmentManager);
-            mapCardHamburg.setOnClickListener(view1 -> {
-                fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapHamburgFragment, woLiegtWasFragmentTag).addToBackStack(null).commit();
-            });
+            mapCardHamburg.setOnClickListener(view1 -> fragmentManager.beginTransaction().replace(container.getId(), woLiegtWasMapHamburgFragment, woLiegtWasFragmentTag).addToBackStack(null).commit());
         }
     }
 
@@ -206,9 +199,7 @@ public class MainActivity extends AppCompatActivity {
             mapView.updateIntrinsicDimensions(refPicIntrinsicDimensionsX, refPicIntrinsicDimensionsY);
 
             Button reset = view.findViewById(R.id.reset);
-            reset.setOnClickListener(view1 -> {
-                mapView.reset();
-            });
+            reset.setOnClickListener(view1 -> mapView.reset());
 
             Button confirm = view.findViewById(R.id.confirm);
             confirm.setOnClickListener(view1 -> {

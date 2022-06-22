@@ -133,6 +133,14 @@
     <string name="woliegtwas_closestGuessSendText">closestGuessSendText</string>
 
 
+    <string name="schatztn_editTextDefaultHint">schätztn?</string>
+    <string name="schatztn_sendTextStart">schatztn_sendTextStart</string>
+    <string name="schatztn_sendTextEnd">schatztn_sendTextEnd</string>
+
+    <string name="schatztn_sendReset">schatztn_sendReset</string>
+
+
+
 
 
 </resources>

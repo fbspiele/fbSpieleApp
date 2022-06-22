@@ -127,6 +127,11 @@ class Connection implements Runnable {
         if(message.contains(getString(R.string.woliegtwas_woLiegtWasResetMaps))){
             mainActivity.woLiegtWasReset();
         }
+
+
+        if(message.contains(getString(R.string.schatztn_sendReset))){
+            mainActivity.schatztnReset();
+        }
     }
 
     String getString(int id){

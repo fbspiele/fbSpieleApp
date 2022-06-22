@@ -15,10 +15,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -106,6 +109,79 @@ public class MainActivity extends AppCompatActivity {
     void woLiegtWasReset(){
         if(WoLiegtWasMapFragment.mapView!=null){
             WoLiegtWasMapFragment.mapView.reset();
+        }
+    }
+
+
+    void schatztnReset(){
+        SchatztnFragment.reset();
+    }
+
+
+
+
+    public static class SchatztnFragment extends GameFragment {
+
+        public SchatztnFragment(MainActivity mainActivity, FragmentManager fragmentManager) {
+            super(mainActivity, fragmentManager, R.layout.layout_schatztn);
+        }
+
+        static Double guess;
+        View schatztnView;
+        static EditText schatztnEditText;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            schatztnView = super.onCreateView(inflater, container, savedInstanceState);
+            assert schatztnView != null;
+            schatztnEditText = schatztnView.findViewById(R.id.schatztnEditText);
+
+            Button confirm = schatztnView.findViewById(R.id.confirm);
+            Button cancel = schatztnView.findViewById(R.id.cancel);
+
+            confirm.setOnClickListener(view -> {
+                try {
+                    guess = Double.parseDouble(schatztnEditText.getText().toString());
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(context, "input was not a number",Toast.LENGTH_LONG).show();
+                }
+                schatztnEditText.setTextColor(getResources().getColor(R.color.blue_gray_200));
+                sendText(getString(R.string.schatztn_sendTextStart)+guess+getString(R.string.schatztn_sendTextEnd));
+            });
+
+            cancel.setOnClickListener(view -> {
+                if(guess!=null){
+                    schatztnEditText.setText(String.valueOf(guess));
+                }
+            });
+
+            schatztnEditText.setOnClickListener(view -> {
+                schatztnEditText.setCursorVisible(true);
+            });
+
+            schatztnEditText.setOnKeyListener((view, i, keyEvent) -> {
+                schatztnEditText.setTextColor(getResources().getColor(R.color.black));
+                return false;
+            });
+
+            schatztnEditText.setOnEditorActionListener((v, actionId, event) -> {
+                InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(schatztnEditText.getWindowToken(), 0);
+                schatztnEditText.setCursorVisible(false);
+                return true;
+            });
+
+            return schatztnView;
+        }
+
+        static public void reset() {
+            guess = null;
+            if(schatztnEditText!=null){
+                schatztnEditText.setText("");
+            }
         }
     }
 
@@ -390,6 +466,7 @@ public class MainActivity extends AppCompatActivity {
 
         void onSchaetztnCardClick(){
             //todo
+            fragmentManager.beginTransaction().replace(container.getId(),new SchatztnFragment(mainActivity, fragmentManager)).addToBackStack(null).commit();
         }
 
     }

@@ -102,6 +102,14 @@ public class MyMapView extends MyImageView {
         this(context,attrs,0);
     }
 
+    public void reset(){
+        initializeMarkerList();
+        resetScaleTranslate();
+        circleList = new ArrayList<>();
+        myMarker = null;
+        mySendMarker = null;
+        invalidate();
+    }
 
     GestureDetector myMapGestureDetector;
     public MyMapView(Context context, AttributeSet attrs, int defStyle) {
@@ -298,7 +306,7 @@ public class MyMapView extends MyImageView {
         }
         if(mySendMarker!=null){
             if(rightCoords!=null){
-                Circle myCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,mySendMarker.kugelCoords),closestCircleColor);
+                Circle myCircle = new Circle(rightCoords,calcDegAngleBetweenCoords(rightCoords,mySendMarker.kugelCoords),myColor);
                 circleList.add(myCircle);
             }
         }

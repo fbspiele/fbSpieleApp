@@ -102,7 +102,12 @@ public class MainActivity extends AppCompatActivity {
         if(WoLiegtWasMapFragment.mapView!=null){
             WoLiegtWasMapFragment.mapView.auflosungFromText(text);
         }
+    }
 
+    void woLiegtWasReset(){
+        if(WoLiegtWasMapFragment.mapView!=null){
+            WoLiegtWasMapFragment.mapView.reset();
+        }
     }
 
     public static class WoLiegtWasOverviewFragment extends GameFragment {
@@ -202,8 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
             Button reset = view.findViewById(R.id.reset);
             reset.setOnClickListener(view1 -> {
-                mapView.initializeMarkerList();
-                mapView.resetScaleTranslate();
+                mapView.reset();
             });
 
             Button confirm = view.findViewById(R.id.confirm);

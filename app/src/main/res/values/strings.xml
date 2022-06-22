@@ -112,6 +112,10 @@
     <string name="woliegtwas_woLiegtWasAuflosungStart">woLiegtWasAuflosungStart</string>
     <string name="woliegtwas_woLiegtWasAuflosungEnd">woLiegtWasAuflosungEnd</string>
 
+    <string name="woliegtwas_woLiegtWasResetMaps">woLiegtWasReset</string>
+
+
+
     <string name="woliegtwas_entrySendTextGenerelSplitter">entrySendTextGenerelSplitter</string>
 
     <string name="woliegtwas_entrySendTextPhiStart">entrySendTextPhiStart</string>
@@ -126,9 +130,9 @@
     <string name="woliegtwas_entrySendTextExtraRightAnswer">entrySendTextExtraRightAnswer</string>
     <string name="woliegtwas_entrySendTextExtraClosest">entrySendTextExtraClosest</string>
 
-
-
     <string name="woliegtwas_closestGuessSendText">closestGuessSendText</string>
+
+
 
 
 </resources>

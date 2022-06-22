@@ -123,6 +123,10 @@ class Connection implements Runnable {
             String auflosungsMessage = message.substring(startIndex,endIndex);
             mainActivity.woLiegtWasAuflosungFromText(auflosungsMessage);
         }
+
+        if(message.contains(getString(R.string.woliegtwas_woLiegtWasResetMaps))){
+            mainActivity.woLiegtWasReset();
+        }
     }
 
     String getString(int id){

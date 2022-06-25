@@ -106,7 +106,9 @@ public class Connectivity {
                 text = "xxx"+text+"xxx";
                 if (crypto!=null){
                     String encrypted = crypto.encryptHex(text);
+                    Log.v(tag, "encrypting\n\t"+text+"\nto send the encrypted\n\t"+encrypted);
                     ps.println(encrypted);
+                    ps.flush();
                     Log.v("sending", "\n"+text+"\n"+encrypted);
                 }
                 else {

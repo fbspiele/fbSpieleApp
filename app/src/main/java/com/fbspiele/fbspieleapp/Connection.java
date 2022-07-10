@@ -103,6 +103,8 @@ class Connection implements Runnable {
         }
     }
 
+    String woLiegtWasAuflosenGesText = "";
+
     private void fbsocketdataverarbeiten(String message){
         Log.v(tag,message);
         if(message.contains(getString(R.string.connected_message))){
@@ -117,16 +119,28 @@ class Connection implements Runnable {
         if(message.contains(getString(R.string.buzzer_toSlow_message))){
             mainActivity.buzzeredToSlow();
         }
-        if(message.contains(getString(R.string.woliegtwas_woLiegtWasAuflosungStart))){
-            int startIndex = message.indexOf(getString(R.string.woliegtwas_woLiegtWasAuflosungStart))+getString(R.string.woliegtwas_woLiegtWasAuflosungStart).length();
-            int endIndex = message.indexOf(getString(R.string.woliegtwas_woLiegtWasAuflosungEnd));
-            String auflosungsMessage = message.substring(startIndex,endIndex);
-            mainActivity.woLiegtWasAuflosungFromText(auflosungsMessage);
-        }
 
+
+
+        if(message.contains(getString(R.string.woliegtwas_woLiegtWasAuflosungStart))){
+            woLiegtWasAuflosenGesText = "";
+        }
+        if(message.contains(getString(R.string.entrySendTextGenerelStart))&&message.contains(getString(R.string.entrySendTextGenerelEnd))){
+            int startIndex = message.indexOf(getString(R.string.entrySendTextGenerelStart))+getString(R.string.entrySendTextGenerelStart).length();
+            int endIndex = message.indexOf(getString(R.string.entrySendTextGenerelEnd));
+            String auflosungsMessageOfEntry = message.substring(startIndex,endIndex);
+            if(woLiegtWasAuflosenGesText.length()!=0){
+                woLiegtWasAuflosenGesText = woLiegtWasAuflosenGesText + getString(R.string.woliegtwas_entrySplitter);
+            }
+            woLiegtWasAuflosenGesText = woLiegtWasAuflosenGesText + auflosungsMessageOfEntry;
+        }
+        if(message.contains(getString(R.string.woliegtwas_woLiegtWasAuflosungEnd))){
+            mainActivity.woLiegtWasAuflosungFromText(woLiegtWasAuflosenGesText);
+        }
         if(message.contains(getString(R.string.woliegtwas_woLiegtWasResetMaps))){
             mainActivity.woLiegtWasReset();
         }
+
 
 
         if(message.contains(getString(R.string.schatztn_sendReset))){

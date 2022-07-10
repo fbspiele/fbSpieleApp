@@ -251,7 +251,7 @@ public class MyMapView extends MyImageView {
     }
 
     void auflosungFromText(String auflosungsText){
-        String entrySplitter = getContext().getString(R.string.woliegtwas_entrySendTextGenerelSplitter);
+        String entrySplitter = getContext().getString(R.string.woliegtwas_entrySplitter);
         String[] splitted = auflosungsText.split(entrySplitter);
 
         Context context = getContext();

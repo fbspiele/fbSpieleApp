@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Handler handler;
 
     FragmentManager fragmentManager;
-
+    //todo app funktioniert nicht auf archos (vielleicht doch mit alten android versionen ein problem?)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(tag,"onCreate");
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 mapView.mySendMarker = mapView.myMarker;
-                mapView.mySendMarker.setColor(Color.parseColor("#B0BEC5"));
+                mapView.mySendMarker.setColor(Color.parseColor("#505050"));
                 mapView.mySendMarker.markerId = 1;
                 mapView.markerList.add(mapView.mySendMarker);
                 mainActivity.sendText(getSendMyCoordsText(mapView.getMyMarkerKugelCoords()));

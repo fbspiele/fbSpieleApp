@@ -116,21 +116,27 @@
 
 
 
-    <string name="woliegtwas_entrySendTextGenerelSplitter">entrySendTextGenerelSplitter</string>
+    <string name="entrySendTextGenerelStart">entryStart</string>
+    <string name="entrySendTextGenerelEnd">entryEnd</string>
 
-    <string name="woliegtwas_entrySendTextPhiStart">entrySendTextPhiStart</string>
-    <string name="woliegtwas_entrySendTextPhiEnd">entrySendTextPhiEnd</string>
-    <string name="woliegtwas_entrySendTextThetaStart">entrySendTextThetaStart</string>
-    <string name="woliegtwas_entrySendTextThetaEnd">entrySendTextThetaEnd</string>
-    <string name="woliegtwas_entrySendTextColorStart">entrySendTextColorStart</string>
-    <string name="woliegtwas_entrySendTextColorEnd">entrySendTextColorEnd</string>
-    <string name="woliegtwas_entrySendTextExtraStart">entrySendTextExtraStart</string>
-    <string name="woliegtwas_entrySendTextExtraEnd">entrySendTextExtraEnd</string>
 
-    <string name="woliegtwas_entrySendTextExtraRightAnswer">entrySendTextExtraRightAnswer</string>
-    <string name="woliegtwas_entrySendTextExtraClosest">entrySendTextExtraClosest</string>
+    <!--- only used in this app (not send or received) -->
+    <string name="woliegtwas_entrySplitter">entrySplitter</string>
 
-    <string name="woliegtwas_closestGuessSendText">closestGuessSendText</string>
+
+    <string name="woliegtwas_entrySendTextPhiStart">phiStart</string>
+    <string name="woliegtwas_entrySendTextPhiEnd">phiEnd</string>
+    <string name="woliegtwas_entrySendTextThetaStart">thetaStart</string>
+    <string name="woliegtwas_entrySendTextThetaEnd">thetaEnd</string>
+    <string name="woliegtwas_entrySendTextColorStart">colorStart</string>
+    <string name="woliegtwas_entrySendTextColorEnd">colorEnd</string>
+    <string name="woliegtwas_entrySendTextExtraStart">extraStart</string>
+    <string name="woliegtwas_entrySendTextExtraEnd">extraEnd</string>
+
+    <string name="woliegtwas_entrySendTextExtraRightAnswer">rightAnswer</string>
+    <string name="woliegtwas_entrySendTextExtraClosest">closest</string>
+
+    <string name="woliegtwas_closestGuessSendText">closestSendText</string>
 
 
     <string name="schatztn_editTextDefaultHint">schätztn?</string>

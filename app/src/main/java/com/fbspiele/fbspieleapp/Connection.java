@@ -47,19 +47,29 @@ class Connection implements Runnable {
                 char[] buffer = new char[BUFFER_SIZE];
                 while ((charsRead = socketbufferedreader.read(buffer)) != -1) {
                     message = new String(buffer).substring(0, charsRead);
-                    for (String line : message.split("\n")){
-                        if(crypto==null){
+                    Log.w(tag, message);
+                    for (String line : message.split("\n\n\n")){
+                        line = line.replace("\n","");
+                        if(crypto==null || line.length()==0){
                             Log.v(tag,"crypto == null vor socketdataverarbeiten");
                         }
                         else{
+                            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mainActivity.getApplicationContext());
+                            boolean useEncryption = sharedPref.getBoolean(getString(R.string.settings_key_useEncryption),true);
                             String decrypted;
                             try {
-                                decrypted = crypto.decryptHex(line);
-                                Log.v(tag,"Receiving\n"+line +"\n"+decrypted);
+                                Log.d(tag,"trying to decrypt\n\t"+line);
+                                if(useEncryption){
+                                    decrypted = crypto.decryptHex(line);
+                                }
+                                else{
+                                    decrypted = line;
+                                }
+                                Log.d(tag,"Receiving\n"+line +"\n"+decrypted);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 decrypted = "";
-                                Log.v(tag,"receiving exception for message\n"+line);
+                                Log.d(tag,"receiving exception for message\n"+line);
                             }
                             if(decrypted.length()>0){
                                 fbsocketdataverarbeiten(decrypted);

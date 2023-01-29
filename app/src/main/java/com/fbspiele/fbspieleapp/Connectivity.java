@@ -105,11 +105,19 @@ public class Connectivity {
                 }
                 text = "xxx"+text+"xxx";
                 if (crypto!=null){
-                    String encrypted = crypto.encryptHex(text);
+
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mainActivity.getApplicationContext());
+                    boolean useEncryption = sharedPref.getBoolean(getString(R.string.settings_key_useEncryption),true);
+                    String encrypted;
+                    if(useEncryption){
+                        encrypted = crypto.encryptHex(text);
+                    }
+                    else{
+                        encrypted = text;
+                    }
                     Log.v(tag, "encrypting\n\t"+text+"\nto send the encrypted\n\t"+encrypted);
-                    ps.println(encrypted);
+                    ps.println(encrypted+"\n\n\n");
                     ps.flush();
-                    Log.v("sending", "\n"+text+"\n"+encrypted);
                 }
                 else {
                     Log.v(tag, "crypto == null (no password/salt set?)");

@@ -1,5 +1,7 @@
 package com.fbspiele.fbspieleapp;
 
+import android.util.Log;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -15,6 +17,9 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
+
+
+    private static final String tag = "Crpyto";
     // main source for this class: https://mkyong.com/java/java-aes-encryption-and-decryption/
 
     // salt: to derive a different key from password, does not need to be secret (https://stackoverflow.com/a/1905405)
@@ -162,6 +167,7 @@ old
             encryptedMessage = bytesToHex(encryptToBytes(message));
         } catch (Exception e) {
             e.printStackTrace();
+            Log.w(tag, "wrong message above\n\t"+message);
         }
         return encryptedMessage;
     }

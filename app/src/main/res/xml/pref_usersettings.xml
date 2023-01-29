@@ -11,13 +11,19 @@
             android:digits="0123456789." />
 
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/settings_key_useEncryption"
+            android:title="@string/settings_title_useEncryption" />
+
         <EditTextPreference
             android:key="@string/settings_key_password"
             android:title="@string/settings_title_password"
             app:useSimpleSummaryProvider="true"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:dependency="@string/settings_key_useEncryption"/>
 
         <EditTextPreference
             android:key="@string/settings_key_salt"
@@ -25,7 +31,8 @@
             app:useSimpleSummaryProvider="true"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:dependency="@string/settings_key_useEncryption"/>
 
     </PreferenceCategory>
 

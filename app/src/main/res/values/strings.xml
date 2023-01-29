@@ -23,6 +23,10 @@
     <string name="settings_title_port">port</string>
     <string name="settings_default_port">2079</string>
 
+    <string name="settings_key_useEncryption">settings_key_useEncryption</string>
+    <string name="settings_title_useEncryption">encryption?</string>
+    <string name="settings_useEncryption_pref_key">settings_useEncryption_pref_key</string>
+
     <string name="settings_key_password">settings_key_password</string>
     <string name="settings_title_password">password</string>
     <string name="settings_encryptedPassword_pref_key">settings_encryptedPassword_pref_key</string>
